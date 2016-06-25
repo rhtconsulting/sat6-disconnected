@@ -1,0 +1,38 @@
+# Sample /etc/ansible/hosts file for use with "Advanced" method of installing OpenShift Enterprise 3.x
+# The last three lines are for configuring in an environment where redhat.com access isn't available.
+# Note that this is a single-master sample only, you may choose to have more masters or more complex
+# installs.  See other examples for OSE at:
+# https://docs.openshift.com/enterprise/3.2/install_config/install/advanced_install.html
+
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_sudo must be set to true
+#ansible_sudo=true
+
+deployment_type=openshift-enterprise
+
+# uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+# host group for masters
+[masters]
+master.example.com
+
+# host group for nodes, includes region info
+[nodes]
+master.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+node1.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node2.example.com openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+
+# for disconnected or partially-connected environments, set specific registrys for Docker to use
+openshift_docker_additional_registries=my.corp.registry.org:5000
+openshift_docker_insecure_registries=my.corp.registry.org:5000
+openshift_docker_blocked_registries=registry.access.redhat.com,docker.io
