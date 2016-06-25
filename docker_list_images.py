@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # a quick-n-dirty method to query a Docker repository (v1) at registry.access.redhat.com for all images/namespaces available
+# original credit to Nick Sabine (github.com/nsabine/ose_scripts)
 
 try:
     # For Python 3.0 and later

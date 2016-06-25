@@ -5,8 +5,16 @@
 # and pull them to the local registry,
 # filtering by the IMAGE_REGEX pattern
 # finally, save the images to files
+# This will create a directory structure under $IMAGES_PATH
+# which contains the saved images.
 
+# original credit to Nick Sabine (github.com/nsabine/ose_scripts)
+
+# the regular-expression defining which images to pull
+# (remove egrep from "repos" below to pull all available)
 IMAGE_REGEX='^rhel|^openshift3|^rhscl/'
+
+# the path at which to store images
 IMAGES_PATH=/opt/docker/saved_images
 
 # get list of images to pull

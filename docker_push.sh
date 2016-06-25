@@ -4,10 +4,16 @@
 # and push them into the site-wide registry. Intended 
 # to be run following docker_load.sh
 
-OLD_REGISTRY=registry.access.redhat.com
+# original credit to Nick Sabine (github.com/nsabine/ose_scripts)
+
+# your corporate registry
 REGISTRY=my.corp.registry.org:5000
 
-# get list of local images
+# the original registry to rename (source)
+OLD_REGISTRY=registry.access.redhat.com
+
+
+# get list of local images tagged with OLD_REGISTRY
 IMAGES=$(docker images | awk -v SRC="${OLD_REGISTRY}" '$O ~ SRC {printf "%s:%s\n",$1,$2}')
 
 # tag/push each image
@@ -28,7 +34,7 @@ do
     RET=$?
   done
 
-  # finally, remove existing tag (optoinal)
+  # finally, remove existing tag (optional)
 #  docker rmi $IMAGE:$VERS
 
 done
