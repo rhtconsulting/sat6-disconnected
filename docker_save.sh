@@ -42,7 +42,8 @@ do
   sudo docker save -o ${IMAGES_PATH}/${r}.tar $VERSIONSTRING
   sudo rm -f ${IMAGES_PATH}/${r}.tar.gz
   sudo gzip ${IMAGES_PATH}/${r}.tar
-  underscore=$(echo ${r} | sed s^/^_^g)
-  curl -k -f -v -T ${IMAGES_PATH}/${r}.tar.gz https://10.0.93.8/file/satelite6/${underscore}.tar.gz
+  # extra actions to push to disconnected environment (environment-specific)
+  #underscore=$(echo ${r} | sed s^/^_^g)
+  #curl -k -f -v -T ${IMAGES_PATH}/${r}.tar.gz https://10.0.93.8/file/satelite6/${underscore}.tar.gz
 
 done
