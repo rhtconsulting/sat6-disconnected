@@ -40,11 +40,9 @@ do
 # remove file part (pre-conversion)
   rm ${file}
   echo Uploading Part ${file}
-#  curl -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
+  curl -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
 #  remove file conversion
-#  rm ${file}.txt
-#  just a test mv for now:
-   mv ${file}.txt /opt/test/$(basename ${file})_of_${TOTALCNT}.txt
+  rm ${file}.txt
 done
 # remove original from WATCHDIR
 rm $THEFILE
