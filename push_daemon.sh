@@ -6,7 +6,7 @@
 WATCHDIR=/opt/test
 TRANSDIR=/opt/test/transfer
 BASEURL="https://10.0.93.8/file/satelite6/"
-MAX_SIZE=1K
+MAX_SIZE=400M
 
 if [ $(find $WATCHDIR -maxdepth 1 -type f -size +1c | wc -l) -eq 0 ]
 then
