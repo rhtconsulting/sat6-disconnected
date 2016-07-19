@@ -41,8 +41,15 @@ do
   rm ${file}
   echo Uploading Part ${file}
   curl -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
+  retval=$?
+  if [ $retval -ne 0 ]
+  then
+    echo Curl returned error, quitting!
+    exit 1
+  else
 #  remove file conversion
-  rm ${file}.txt
+    rm ${file}.txt
+  fi
 done
 # remove original from WATCHDIR
 rm $THEFILE
