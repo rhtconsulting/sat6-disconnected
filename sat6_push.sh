@@ -12,7 +12,7 @@ MAX_SIZE=500M
 
 HAMMERTIME="/usr/bin/hammer --password password content-view version export --content-view-id 1 --organization-id 1 --since $(date -d 'last week' +%Y-%m-%dT00:00:00)"
 echo $HAMMERTIME
-#$HAMMERTIME
+$HAMMERTIME
 
 # tar everything up
 TARCMD="/usr/bin/tar -cvf ${TARFILE} -C ${INCRDIR} ."

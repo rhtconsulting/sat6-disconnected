@@ -8,9 +8,17 @@ TRANSDIR=/opt/test/transfer
 BASEURL="https://10.0.93.8/file/satelite6/"
 MAX_SIZE=400M
 
+# don't bother running if another instance is
+if [ -f ${WATCHDIR}/push_daemon_lock ]
+then
+  exit 0
+fi
+
+touch $WATCHDIR/push_daemon_lock
+
+# check incoming directory for files, quit if none
 if [ $(find $WATCHDIR -maxdepth 1 -type f -size +1c | wc -l) -eq 0 ]
 then
-  echo "No files in incoming directory, exiting"
   exit 0
 fi
 
@@ -53,3 +61,5 @@ do
 done
 # remove original from WATCHDIR
 rm $THEFILE
+# remove lock
+rm $WATCHDIR/push_daemon_lock

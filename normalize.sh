@@ -6,12 +6,20 @@
 WATCHDIR=/opt/test
 DONEDIR=/opt/test/done
 
+# don't bother running if another instance is
+if [ -f ${WATCHDIR}/normalize_lock ]
+then
+  exit 0
+fi
+
+touch $WATCHDIR/normalize_lock
+
 # grab the first file in that list
 THEFILE=$(find $WATCHDIR -maxdepth 1 -type f -name '*_of_*.txt' -not -name '.*' | head -1)
 
+# exit if list is empty
 if [ $(echo $THEFILE | wc -w) -eq 0 ]
 then
-  echo "No files in incoming directory, exiting"
   exit 0
 fi
 
@@ -51,3 +59,6 @@ do
     rm $DONEDIR/$BASENAME.$num
   fi
 done
+
+# remove lock
+rm $WATCHDIR/normalize_lock
