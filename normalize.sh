@@ -29,14 +29,14 @@ echo $THEFILE found.  Starting convert/check routine.
 # figure out how many parts we're dealing with
 
 TOTALCNT=$(echo ${THEFILE} | rev | cut -d. -f2 | cut -d_ -f1 | rev)
-FILEBASE=$(echo ${THEFILE} | rev | cut -d. -f3 | rev)
+FILEBASE=$(echo ${THEFILE} | rev | cut -d. -f3- | rev)
 DONEFILE=${DONEDIR}/$(basename ${FILEBASE})
 
 echo -n > $DONEFILE
 for num in $(seq -f %02g 0 ${TOTALCNT})
 do
   FILE=${FILEBASE}.${num}_of_${TOTALCNT}.txt
-  BASENAME=$(basename $FILE | rev | cut -d. -f3 | rev)
+  BASENAME=$(basename $FILE | rev | cut -d. -f3- | rev)
   while ! [ -f ${FILE} ] 
   do
     echo "Waiting on $FILE to be transferred..."
@@ -45,7 +45,7 @@ do
   echo Converting $FILE to $DONEDIR/$BASENAME.$num
   tail -n +3 $FILE | base64 -d > $DONEDIR/$BASENAME.$num
   echo Checking $DONEDIR/$BASENAME.$num
-  echo $(grep $BASENAME $FILE | cut -d' ' -f1) $DONEDIR/$BASENAME.$num > $DONEDIR/$BASENAME.$num.sha
+  echo $(head $FILE -2 | tail -1 | cut -d' ' -f1) $DONEDIR/$BASENAME.$num > $DONEDIR/$BASENAME.$num.sha
   sha256sum -c $DONEDIR/$BASENAME.$num.sha
   retval=$?
   if [ $retval -ne 0 ]

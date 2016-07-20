@@ -48,7 +48,7 @@ do
 # remove file part (pre-conversion)
   rm ${file}
   echo Uploading Part ${file}
-  curl -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
+  curl -q -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
   retval=$?
   if [ $retval -ne 0 ]
   then
