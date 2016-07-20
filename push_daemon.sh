@@ -14,13 +14,13 @@ then
   exit 0
 fi
 
-touch $WATCHDIR/push_daemon_lock
-
 # check incoming directory for files, quit if none
 if [ $(find $WATCHDIR -maxdepth 1 -type f -size +1c | wc -l) -eq 0 ]
 then
   exit 0
 fi
+
+touch $WATCHDIR/push_daemon_lock
 
 # grab the first file in that list
 THEFILE=$(find $WATCHDIR -maxdepth 1 -type f | head -1)

@@ -12,8 +12,6 @@ then
   exit 0
 fi
 
-touch $WATCHDIR/normalize_lock
-
 # grab the first file in that list
 THEFILE=$(find $WATCHDIR -maxdepth 1 -type f -name '*_of_*.txt' -not -name '.*' | head -1)
 
@@ -22,6 +20,8 @@ if [ $(echo $THEFILE | wc -w) -eq 0 ]
 then
   exit 0
 fi
+
+touch $WATCHDIR/normalize_lock
 
 echo $THEFILE found.  Starting convert/check routine.
 
