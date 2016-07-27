@@ -33,7 +33,7 @@ do
   if [ -f $TMPDIR/${FILEBASE}.inprogress ]
   then
     #exit 0
-    echo $TMPDIR/${FILEBASE}.inprogress found, skipping.
+    echo "$(date '+%Y%m%d - %H:%M:%S') $TMPDIR/${FILEBASE}.inprogress found, skipping."
   else
     break
   fi

@@ -1,49 +1,33 @@
 #!/bin/bash -x
 
-# grab all available images on the upstream registry
-# that docker_list_images.py points to (redhat.com)
-# and pull them to the local registry,
-# filtering by the IMAGE_REGEX pattern
-# finally, save the images to files
-# This will create a directory structure under $IMAGES_PATH
-# which contains the saved images.
+STORAGE=/var/lib/pulp/exports/docker
+IMAGE_STORAGE=${STORAGE}/images
+DESTINATION=/var/lib/pulp/exports/to_send/
 
-# original credit to Nick Sabine (github.com/nsabine/ose_scripts)
+repos=$(/var/lib/pulp/exports/docker_list_images.py | egrep  '^rhel|^openshift3|^rhscl/')
 
-# the regular-expression defining which images to pull
-# (remove egrep from "repos" below to pull all available)
-IMAGE_REGEX='^rhel|^openshift3|^rhscl/'
-
-# the path at which to store images
-IMAGES_PATH=/opt/docker/saved_images
-
-# get list of images to pull
-repos=$(python docker_list_images.py | egrep $IMAGE_REGEX)
-
-
+# do a fresh pull of everything in our regex above
 for r in $repos;
 do
-  SAVE_DIR=$(dirname ${IMAGES_PATH}/$r)
+  SAVE_DIR=$(dirname ${IMAGE_STORAGE}/$r)
   sudo mkdir -p ${SAVE_DIR}
   CLEANEXIT=1
   TRIES=1
-  # pull each image, retrying if failures are detected (up to 4)
   while [ ${CLEANEXIT} -ne 0 -a ${TRIES} -lt 4 ]; 
   do
     docker pull -a registry.access.redhat.com/$r
     CLEANEXIT=$?
     ((TRIES++))
   done
-  
+done
+
+# we only want to save and push stuff changed within the past week...
+for r in $(docker images | grep 'days ago' | cut -d' ' -f1 | grep registry.access.redhat.com | sort | uniq | sed s?registry.access.redhat.com/??)
+do
   VERSIONSTRING=$(docker images | grep $r | awk '{print $1 ":" $2}'| sort | uniq)
 
-  # save and compress each image on disk, replacing old copies if necessary
-  echo sudo docker save -o ${IMAGES_PATH}/${r}.tar $VERSIONSTRING
-  sudo docker save -o ${IMAGES_PATH}/${r}.tar $VERSIONSTRING
-  sudo rm -f ${IMAGES_PATH}/${r}.tar.gz
-  sudo gzip ${IMAGES_PATH}/${r}.tar
-  # extra actions to push to disconnected environment (environment-specific)
-  #underscore=$(echo ${r} | sed s^/^_^g)
-  #curl -k -f -v -T ${IMAGES_PATH}/${r}.tar.gz https://10.0.93.8/file/satelite6/${underscore}.tar.gz
-
+  echo docker save $VERSIONSTRING \| gzip \> ${IMAGE_STORAGE}/${r}.tar.gz
+  docker save $VERSIONSTRING | gzip > ${IMAGE_STORAGE}/${r}.tar.gz
+  underscore=$(echo ${r} | sed s^/^_^g)
+  mv -v ${IMAGE_STORAGE}/${r}.tar.gz ${DESTINATION}/${underscore}.tar.gz.docker
 done

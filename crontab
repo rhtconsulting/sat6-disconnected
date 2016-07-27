@@ -1,0 +1,2 @@
+*/5 * * * *     /bin/bash /var/lib/pulp/exports/push_daemon.sh 2>&1 >> /var/lib/pulp/exports/push_daemon.log
+15 1 * * *      /bin/bash /var/lib/pulp/exports/docker_save.sh 2>&1 >> /var/lib/pulp/exports/docker.log
