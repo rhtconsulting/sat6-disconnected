@@ -25,7 +25,7 @@ do
   # check for end-of-list keyword
   if [ $THEFILE == "exit" ]
   then
-    echo "No files found, exiting"
+    #echo "No files found, exiting"
     exit 0
   fi
   
@@ -86,4 +86,4 @@ done
 rm $THEFILE
 # remove lock
 #rm $TRANSDIR/push_daemon_lock
-touch $TMPDIR/${FILEBASE}.inprogress
+rm $TMPDIR/${FILEBASE}.inprogress
