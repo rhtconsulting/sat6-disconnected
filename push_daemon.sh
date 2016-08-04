@@ -3,7 +3,7 @@
 # push_daemon.sh
 # a script to consistently convert, split, and send stuff across portkey
 
-WATCHDIR=/opt/test
+WATCHDIR=/opt/test/new
 TRANSDIR=/opt/test/transfer
 TMPDIR=/opt/test/transfer/temp
 BASEURL="https://10.0.93.8/file/satelite6/"
@@ -68,7 +68,8 @@ do
   while [ $retval -ne 0 ]
   do
     echo "$(date '+%Y%m%d - %H:%M:%S') Uploading Part ${file}"
-    curl -q -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
+    #curl -s -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
+    cp ${file}.txt /opt/test/out/$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
     retval=$?
     if [ $retval -ne 0 ]
     then
