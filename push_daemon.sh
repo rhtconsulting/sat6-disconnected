@@ -68,8 +68,7 @@ do
   while [ $retval -ne 0 ]
   do
     echo "$(date '+%Y%m%d - %H:%M:%S') Uploading Part ${file}"
-    #curl -s -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
-    cp ${file}.txt /opt/test/out/$(basename ${file})_of_${TOTALCNT}.txt > $TRANSFILE
+    curl -s -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt 2>&1 > $TRANSFILE
     retval=$?
     if [ $retval -ne 0 ]
     then
