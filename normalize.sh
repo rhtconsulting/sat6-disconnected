@@ -91,6 +91,6 @@ done
 
 # remove lock
 if [ -f $TMPDIR/${FILENONUM}.inprogress ]
-  then
-    rm $TMPDIR/${FILENONUM}.inprogress
-  fi
+then
+  rm $TMPDIR/${FILENONUM}.inprogress
+fi
