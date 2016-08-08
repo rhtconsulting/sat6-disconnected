@@ -7,10 +7,11 @@ WATCHDIR=/opt/test/new
 TRANSDIR=/opt/test/transfer
 TMPDIR=/opt/test/transfer/temp
 BASEURL="https://10.0.93.8/file/satelite6/"
+MAX_CURL_THREADS=2
 MAX_SIZE=400M
 
 # grab the first file in the watch dir
-LIST="$(find $WATCHDIR -maxdepth 1 -type f -size +1c) exit"
+LIST="$(find $WATCHDIR -maxdepth 1 -type f -size +1c -not -name '.*') exit"
 
 # check incoming directory for files, quit if none
 if [ $(echo $LIST | wc -l) -eq 0 ]
@@ -67,6 +68,12 @@ do
   retval=1
   while [ $retval -ne 0 ]
   do
+    # wait until there aren't too many curl threads
+    while [ $(ps -el | grep curl | wc -l) -ge $MAX_CURL_THREADS ]
+    do
+      #echo asleep waiting on curl
+      sleep 5
+    done
     echo "$(date '+%Y%m%d - %H:%M:%S') Uploading Part ${file}"
     curl -s -k -f -T ${file}.txt ${BASEURL}$(basename ${file})_of_${TOTALCNT}.txt 2>&1 > $TRANSFILE
     retval=$?
