@@ -6,7 +6,7 @@ IMAGE_STORAGE=${STORAGE}/images
 DESTINATION=/var/lib/portkey/to_send/
 DOCKER_IMAGES=$(mktemp)
 
-repos=$(/var/lib/portkey/sat6-disconnected/docker_list_images.py | egrep  '^rhel|^openshift3|^rhscl/|^jboss|^dotnet' | grep -v beta)
+repos=$(/var/lib/portkey/sat6-disconnected/docker_list_images.py | egrep  '^rhel|^openshift3|^rhscl/|^jboss|^dotnet|^cloudforms' | grep -v beta)
 
 # do a fresh pull of everything in our regex above
 for r in $repos;
