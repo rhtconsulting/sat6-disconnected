@@ -9,6 +9,8 @@ METADIR=/var/lib/pulp/published/yum/https/
 DESTDIR=/var/lib/portkey/to_send
 # set whether to download kickstart info (only necessary for the first sync of KS repos)
 DL_KICKSTARTS=0
+# set whether to include all repodata
+ALL_REPODATA=0
 
 # first wait for anything currently synchronizing on the Satellite
 WAIT=$(/usr/bin/hammer --password password task list --search running | grep Synchronize | wc -l)
@@ -125,6 +127,21 @@ fi
 
 chown -R foreman.foreman $INCRDIR
 
+# remove repodata if there are no RPMS and we didn't force all
+if [ $ALL_REPODATA -eq 0 ]
+then
+  for dir in $(find ${INCRDIR} -type d  -name os)
+  do
+    HAS_RPMS=$(ls ${dir}/*.rpm ${dir}/Packages/*.rpm 2>/dev/null | wc -l)
+    if [ $HAS_RPMS -eq 0 ]
+    then
+      echo $dir has rpms = $HAS_RPMS
+      rm -rfv $dir
+    fi
+  done
+fi
+
+
 # tar everything up
 TARCMD="/usr/bin/tar -cf ${TARFILE} -C ${INCRDIR} ."
 echo $TARCMD
@@ -133,3 +150,4 @@ $TARCMD
 # copy into dest dir
 chown -v portkey $TARFILE
 mv -v $TARFILE $DESTDIR
+
